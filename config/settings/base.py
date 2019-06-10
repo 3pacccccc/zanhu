@@ -80,6 +80,7 @@ THIRD_PARTY_APPS = [
 SITE_ID = 1
 LOCAL_APPS = [
     "users.apps.UsersConfig",
+    'news.apps.NewsConfig',
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
