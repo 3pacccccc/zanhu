@@ -67,6 +67,7 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize", # Handy template tags
+    # 'django.forms',   # 用于重写django内置的widget模板(在手动点击预览文章效果的时候用到)
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
@@ -75,16 +76,22 @@ THIRD_PARTY_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
     "sorl.thumbnail",
+    'taggit',
+    'markdownx',
+    'django_comments',
+
 ]
 
 SITE_ID = 1
 LOCAL_APPS = [
     "users.apps.UsersConfig",
     'news.apps.NewsConfig',
+    'articles.apps.ArticlesConfig'
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+# FROM_RENDERER = 'django.forms.renders.TemplatesSetting'   # 更改查找组件模板的顺序，先自定义的模板，后系统默认的模板(在手动点击预览文章效果的时候用到)
 
 # MIGRATIONS
 # ------------------------------------------------------------------------------
@@ -297,3 +304,5 @@ INSTALLED_APPS += ["compressor"]
 STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+MARKDOWNX_SERVER_CALL_LATENCY = 2000   # markdown的发送请求间隔为2000ms

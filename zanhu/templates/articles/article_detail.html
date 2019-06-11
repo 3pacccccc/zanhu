@@ -77,7 +77,8 @@
                                 <i class="fa fa-pencil" aria-hidden="true"></i> 写文章</a>
 
                             {% if request.user.username == article.user.username %}
-                                <a class="btn btn-primary" href="{% url 'articles:edit_article' article.id %}" title="编辑文章">
+{#                                <a class="btn btn-primary" href="{% url 'articles:edit_article' article.id %}" title="编辑文章">#}
+                                <a class="btn btn-primary" href="{% url 'articles:edit_article' article.pk %}" title="编辑文章">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i> 编辑</a>
                             {% endif %}
 
