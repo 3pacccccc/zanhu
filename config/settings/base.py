@@ -86,7 +86,8 @@ SITE_ID = 1
 LOCAL_APPS = [
     "users.apps.UsersConfig",
     'news.apps.NewsConfig',
-    'articles.apps.ArticlesConfig'
+    'articles.apps.ArticlesConfig',
+    'qa.apps.QaConfig'
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
