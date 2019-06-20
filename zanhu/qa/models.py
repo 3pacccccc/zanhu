@@ -107,7 +107,7 @@ class Question(models.Model):
         """
         获取得票数
         """
-        dic = Counter(self.votes.objects.values_list('value', flat=True))
+        dic = Counter(self.votes.values_list('value', flat=True))
         votes = dic[True] - dic[False]
         return votes if votes > 0 else 0
 
@@ -168,7 +168,7 @@ class Answer(models.Model):
         """
         获取得票数
         """
-        dic = Counter(self.votes.objects.values_list('value', flat=True))
+        dic = Counter(self.votes.values_list('value', flat=True))
         votes = dic[True] - dic[False]
         return votes if votes > 0 else 0
 
@@ -191,7 +191,7 @@ class Answer(models.Model):
         采纳回答，先将本问题下所有的问题都置为is_answer=False，再将现在的答案置为采纳回答
         :return:
         """
-        answer_set = Answer.objects.filter(question=self)
+        answer_set = Answer.objects.filter(question=self.question)
         answer_set.update(is_answer=False)
 
         self.is_answer = True
