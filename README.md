@@ -19,3 +19,5 @@ centos7+django2.17+python3.6
 使用django-taggit生成文章的标签
 使用django-markdownx实现发送文章的时候在线预览效果
 使用django-contrib-comments实现文章的评论功能
+使用test-plus, FallbackStorage进行测试
+models几个表合一的高级django用法
