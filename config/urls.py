@@ -6,6 +6,7 @@ from django.views import defaults as default_views
 from django.conf.urls import url
 
 from zanhu.news.views import NewsListView
+from zanhu.qa.views import phoneLog_callback, task_callback
 
 urlpatterns = [
     # path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -25,6 +26,7 @@ urlpatterns = [
     path('news/', include('news.urls', namespace='news')),
     path('articles/', include('articles.urls', namespace='articles')),
     path('qa/', include('qa.urls', namespace='qa')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

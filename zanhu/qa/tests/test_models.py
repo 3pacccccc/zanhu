@@ -32,25 +32,52 @@ class QAModelTest(TestCase):
         """
         给问题投票
         """
-
-        self
-
+        self.question_one.votes.update_or_create(user=self.user, defaults={'value':True})
+        self.question_one.votes.update_or_create(user=self.other_user, defaults={'value':True})
+        assert self.question_one.total_votes() == 2
     def test_can_vote_answer(self):
         """
         给回答投票
         """
+        self.answer.votes.update_or_create(user=self.user, defaults={'value':True})
+        self.answer.votes.update_or_create(user=self.other_user, defaults={'value':True})
+        assert self.answer.total_votes() == 2
 
     def test_get_question_voters(self):
         """
         问题的投票用户
         """
+        self.question_one.votes.update_or_create(user=self.user, defaults={'value': True})
+        self.question_one.votes.update_or_create(user=self.other_user, defaults={'value': False})
+        assert self.user in self.question_one.get_upvoters()
+        assert self.other_user in self.question_one.get_downvoters()
 
     def test_get_answer_voters(self):
         """
         回答的投票用户
         """
+        self.answer.votes.update_or_create(user=self.user, defaults={'value':True})
+        self.answer.votes.update_or_create(user=self.other_user, defaults={'value':False})
+        assert self.user in self.answer.get_upvoters()
+        assert self.other_user in self.answer.get_downvoters()
 
-    def test_get_question_voters(self):
+    def test_unanswered_question(self):
         """
-        问题的投票用户
+        未被回答的问题
         """
+        assert self.question_one == Question.objects.get_unanswered()[0]
+
+    def test_answered_question(self):
+        """
+        已有被采纳答案的问题
+        :return:
+        """
+        assert self.question_two == Question.objects.get_answered()[0]
+
+
+    def test_question_get_answers(self):
+        """
+        获取问题的所有答案
+        :return:
+        """
+        assert self.answer == self.question_two.get_answers()

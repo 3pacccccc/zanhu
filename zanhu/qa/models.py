@@ -5,13 +5,12 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.db.models.signals import post_save
 from django.utils.encoding import python_2_unicode_compatible
 from taggit.managers import TaggableManager
 from slugify import slugify
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
-
-
 
 User = get_user_model()
 
@@ -33,9 +32,8 @@ class Vote(models.Model):
     class Meta:
         verbose_name = '投票'
         verbose_name_plural = verbose_name
-        unique_together = ['user', 'content_type', 'object_id']    # 联合唯一键
+        unique_together = ['user', 'content_type', 'object_id']  # 联合唯一键
         index_together = ('content_type', 'object_id')
-
 
 
 @python_2_unicode_compatible
@@ -140,7 +138,6 @@ class Question(models.Model):
         return Answer.objects.get(is_answer=True, question=self)
 
 
-
 @python_2_unicode_compatible
 class Answer(models.Model):
     uuid_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -201,8 +198,41 @@ class Answer(models.Model):
         self.question.save()
 
 
+"""
+扩展知识：
+以知乎为例，假设model.py下面有三个表，娱乐、科技、政治，使得三个表下面的数据保持统一按照时间顺序排列的方法
+将三张表返回为一张表，例如想要获得article下面的数据，则可以self.content_object.content
+"""
 
 
-
-
-
+# class Index(models.Model):
+#     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+#     object_id = models.PositiveIntegerField()
+#     content_object = GenericForeignKey('content_type', 'object_id')
+#
+#     pub_date = models.DateTimeField()
+#
+#     class Meta:
+#         ordering = ['-pub_date']
+#
+# class News(models.Model):
+#     content = models.CharField(max_length=255)
+#     pub_date = models.DateTimeField(auto_now_add=True)
+#
+# class Article(models.Model):
+#     content = models.CharField(max_length=255)
+#     pub_date = models.DateTimeField(auto_now_add=True)
+#
+# class Question(models.Model):
+#     title = models.TextField()
+#     pub_date = models.DateTimeField(auto_now_add=True)
+#
+#
+# def create_index(sender, instance, **kwargs):
+#     if 'created' in kwargs:
+#         ct = ContentType.objects.get_for_model(instance)
+#         Index.objects.get_or_create(content_type=ct, object_id=instance.id, pub_date=instance.pub_date)
+#
+# post_save.connect(create_index, sender=News)
+# post_save.connect(create_index, sender=Article)
+# post_save.connect(create_index, sender=Question)
