@@ -6,7 +6,7 @@ from django.views import defaults as default_views
 from django.conf.urls import url
 
 from zanhu.news.views import NewsListView
-from zanhu.qa.views import phoneLog_callback, task_callback
+
 
 urlpatterns = [
     # path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
