@@ -48,7 +48,7 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'news:list' %}">&nbsp;&nbsp;首页</a></li>&nbsp;&nbsp;
                 <li class="nav-item"><a class="nav-link" href="{% url 'articles:list' %}">文章</a></li>&nbsp;&nbsp;
                 <li class="nav-item"><a class="nav-link" href="">问答</a></li>&nbsp;&nbsp;
-                <li class="nav-item"><a class="nav-link" href="">私信</a></li>&nbsp;&nbsp;
+                <li class="nav-item"><a class="nav-link" href="{% url 'messager:message_list' %}">私信</a></li>&nbsp;&nbsp;
             </ul>
 
             <form role="search" action="">

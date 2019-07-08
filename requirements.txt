@@ -1,3 +1,4 @@
+channels
 alabaster==0.7.12
 amqp==2.5.0
 appdirs==1.4.3

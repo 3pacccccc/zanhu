@@ -21,3 +21,4 @@ centos7+django2.17+python3.6
 使用django-contrib-comments实现文章的评论功能
 使用test-plus, FallbackStorage进行测试
 models几个表合一的高级django用法
+使用websocket协议与http协议同时进行开发

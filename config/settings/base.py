@@ -71,6 +71,7 @@ DJANGO_APPS = [
     # 'django.forms',   # 用于重写django内置的widget模板(在手动点击预览文章效果的时候用到)
 ]
 THIRD_PARTY_APPS = [
+    "channels",
     "crispy_forms",
     'allauth',
     'allauth.account',
@@ -88,7 +89,8 @@ LOCAL_APPS = [
     "users.apps.UsersConfig",
     'news.apps.NewsConfig',
     'articles.apps.ArticlesConfig',
-    'qa.apps.QaConfig'
+    'qa.apps.QaConfig',
+    'messager.apps.MessagerConfig'
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -308,3 +310,12 @@ STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
 # ------------------------------------------------------------------------------
 
 MARKDOWNX_SERVER_CALL_LATENCY = 2000   # markdown的发送请求间隔为2000ms
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [f'{env("REDIS_URL", default="redis://127.0.0.1:6379")}/3', ],   # 使用redis的三库，使得不与celery等混淆
+        },
+    },
+}

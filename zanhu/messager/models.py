@@ -16,7 +16,7 @@ class MessageQuerySet(models.query.QuerySet):
         """
         qs_one = self.filter(sender=sender, recipient=recipient)
         qs_two = self.filter(sender=recipient, recipient=sender)
-        return qs_one.union(qs_two).order_by('create_at')
+        return qs_one.union(qs_two).order_by('created_at')
 
     def get_most_recent_conversation(self, recipient):
         """
@@ -26,7 +26,7 @@ class MessageQuerySet(models.query.QuerySet):
             qs_sent = self.filter(sender=recipient)
             qs_recieved = self.filter(recipient=recipient)
             #latest使用需要在Message的class Meta里面定义ordering规则
-            qs = qs_sent.union(qs_recieved).latest('create_at')
+            qs = qs_sent.union(qs_recieved).latest('created_at')
             if qs.sender == recipient:
                 # 如果当前用户有发送消息，则返回消息的接受者
                 return qs.recipient
@@ -35,8 +35,6 @@ class MessageQuerySet(models.query.QuerySet):
         except self.model.DoesNotExist:
             # 如果模型实例不存在，返回当前用户
             return User.objects.get(username=recipient.username)
-
-
 
 
 @python_2_unicode_compatible

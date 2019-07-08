@@ -76,7 +76,7 @@ class Question(models.Model):
     content = MarkdownxField(verbose_name='内容')
     tags = TaggableManager(help_text='多个标签使用,(英文)隔开', verbose_name='标签')
     has_answer = models.BooleanField(verbose_name='接受回答', default=False)
-    create_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     votes = GenericRelation(Vote, verbose_name='投票情况')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     update_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
