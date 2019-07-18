@@ -90,7 +90,8 @@ LOCAL_APPS = [
     'news.apps.NewsConfig',
     'articles.apps.ArticlesConfig',
     'qa.apps.QaConfig',
-    'messager.apps.MessagerConfig'
+    'messager.apps.MessagerConfig',
+    'notifications.apps.NotificationsConfig'
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -112,7 +113,7 @@ AUTHENTICATION_BACKENDS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
-LOGIN_REDIRECT_URL = "users:redirect"
+LOGIN_REDIRECT_URL = "news:list"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
 
@@ -310,6 +311,9 @@ STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
 # ------------------------------------------------------------------------------
 
 MARKDOWNX_SERVER_CALL_LATENCY = 2000   # markdown的发送请求间隔为2000ms
+
+# ASGI Server setup
+ASGI_APPLICATION = "config.routing.application"
 
 CHANNEL_LAYERS = {
     "default": {

@@ -1,6 +1,6 @@
 import json
 
-__author__ = "A$ AP xiaoma"
+__author__ = "A$AP xiaoma"
 
 from channels.consumer import SyncConsumer, AsyncConsumer
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -11,7 +11,7 @@ class MessagesConsumer(AsyncWebsocketConsumer):
     处理私信应用中的websocket请求(异步)
     """
     async def connect(self):
-        if self.scope['user'].is_anoymous:
+        if self.scope['user'].is_anonymous:
             # 未登陆用户拒绝连接
             await self.close()
         else:

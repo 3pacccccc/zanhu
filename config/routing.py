@@ -4,7 +4,7 @@ __author__ = "A$ AP xiaoma"
 
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
-from channels.security.websocket import AllowedHostsOriginValidator, OriginValidator
+from channels.security.websocket import AllowedHostsOriginValidator
 
 # AuthMiddlewareStack用于websocket认证，继承了cookiemiddleware，sessionmiddleware， authmiddleware，兼容django认证系统
 
@@ -28,10 +28,14 @@ from zanhu.messager.consumer import MessagesConsumer
 # })
 
 
-application = AllowedHostsOriginValidator(
-    AuthMiddlewareStack(
-        URLRouter([
-            path('ws/<str:username>/', MessagesConsumer)
-        ])
+application = ProtocolTypeRouter({
+    # 普通的HTTP请求不需要我们手动在这里添加，框架会自动加载
+    'websocket': AllowedHostsOriginValidator(
+        AuthMiddlewareStack(
+            URLRouter([
+                # path('ws/notifications/', NotificationsConsumer),
+                path('ws/<str:username>/', MessagesConsumer)
+            ])
+        )
     )
-)
+})

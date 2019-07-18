@@ -1,21 +1,22 @@
+from asgiref.sync import async_to_sync  # 同步变异步，异步变同步的操作
+from channels.layers import get_channel_layer
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
+from django.template.loader import render_to_string
 from django.views.decorators.http import require_http_methods
 from django.views.generic import ListView
 
-from zanhu.messager.models import Message
-
 from zanhu.helpers import ajax_required
+from zanhu.messager.models import Message
 
 User = get_user_model()
 
 
 class MessagesListView(LoginRequiredMixin, ListView):
     model = Message
-    paginate_by = 10
     template_name = 'messager/message_list.html'
 
     def get_context_data(self, *args, **kwargs):
@@ -66,19 +67,16 @@ def send_message(request):
             recipient=recipient,
             message=message
         )
+        # 将前端发送过来的私信，在view函数里面保存之后，推送到websocket里面的consumer去
+        payload = {
+            "type": "receive",  # receive代表consumer函数里面的receive函数
+            "message": render_to_string('messager/single_message.html', {'message': msg}),
+            "sender": sender.username
+        }
+
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(recipient_username, payload)  # async_to_sync将异步变为同步
+
         return render(request, 'messager/single_message.html', {"message": msg})
 
     return HttpResponse()
-
-@ajax_required
-@login_required
-@require_http_methods(['GET'])
-def receive_message(request):
-    """
-    接受消息，AJAX请求
-    :param request:
-    :return:
-    """
-    message_id = request.GET['message_id']
-    msg = Message.objects.get(pk=message_id)
-    return render(request, 'messager/single_message.html', {"message": msg})
