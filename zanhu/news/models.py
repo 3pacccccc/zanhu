@@ -1,8 +1,11 @@
 import uuid
 
-from django.db import models
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.conf import settings
+from django.db import models
 
+from zanhu.notifications.views import notification_handler
 from zanhu.users.models import User
 
 
@@ -22,10 +25,22 @@ class News(models.Model):
     class Meta:
         verbose_name = '首页'
         verbose_name_plural = verbose_name
-        ordering = ('-created_at', )
+        ordering = ('-created_at',)
 
     def __str__(self):
         return self.content
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        super(News, self).save()
+        if not self.reply:
+            channel_layer = get_channel_layer()
+            payload = {
+                "type": "receive",
+                "key": "additional_news",
+                "actor_name": self.user.username,
+            }
+            async_to_sync(channel_layer.group_send)('notifications', payload)
 
     def switch_like(self, user):
         """
@@ -35,6 +50,7 @@ class News(models.Model):
             self.liked.remove(user)
         else:
             self.liked.add(user)
+            notification_handler(user, self.user, 'L', self, id_value=str(self.uuid_id), key='social_update')
 
     def get_parent(self):
         if self.parent:
@@ -56,6 +72,9 @@ class News(models.Model):
             reply=True,
             parent=parent
         )
+        # 通知楼主
+        # notification_handler(user, parent.user, 'L', reply_news, id_value=str(parent.uuid_id), key='social_update')
+        notification_handler(user, parent.user, 'R', parent, id_value=str(self.uuid_id), key='social_update')
 
     def get_thread(self):
         """
@@ -73,4 +92,3 @@ class News(models.Model):
 
     def get_likers(self):
         return self.liked.all()
-

@@ -19,7 +19,7 @@ class NotificationQuerySet(models.query.QuerySet):
         """
         标为已读，可以传入接收者参数
         """
-        qs = self.read()
+        qs = self.unread()
         if recipient:
             qs = qs.filter(recipient=recipient)
         return qs.update(unread=False)

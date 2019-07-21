@@ -1,9 +1,9 @@
 import json
 
-__author__ = "A$AP xiaoma"
-
-from channels.consumer import SyncConsumer, AsyncConsumer
 from channels.generic.websocket import AsyncWebsocketConsumer
+
+
+# __author__ = "MaRuiMin"
 
 
 class MessagesConsumer(AsyncWebsocketConsumer):

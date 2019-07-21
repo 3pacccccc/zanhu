@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_http_methods
 from django.views.generic import ListView, DeleteView
@@ -114,3 +115,13 @@ def post_comment(request):
     else:
         return HttpResponseBadRequest('内容不能为空')
 
+
+@login_required
+@ajax_required
+@require_http_methods(["POST"])
+def update_interactions(request):
+    """更新互动信息"""
+    data_point = request.POST['id_value']
+    news = News.objects.get(pk=data_point)
+    data = {'likes': news.count_likers(), 'comments': news.comment_count()}
+    return JsonResponse(data)

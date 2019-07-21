@@ -1,10 +1,10 @@
 import sys
-import os
 
 import django
+import os
 from channels.routing import get_default_application
 
-__author__ = "A$ AP xiaoma"
+# __author__ = "MaRuiMin"
 
 # application加入查找路径中
 app_path = os.path.abspath(

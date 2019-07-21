@@ -8,6 +8,7 @@ from django.views.generic import ListView, CreateView, DetailView
 from django.contrib import messages
 
 from helpers import ajax_required
+from notifications.views import notification_handler
 from zanhu.qa.models import Question, Answer
 from .forms import QuestionForm
 
@@ -172,4 +173,5 @@ def accept_answer(request):
         raise  PermissionDenied
 
     answer.accept_answer()
+    notification_handler(request.user, answer.user, 'W', answer)
     return JsonResponse({'status': "true"})

@@ -2,8 +2,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django_comments.signals import comment_was_posted
 
-
+from notifications.views import notification_handler
 from zanhu.articles.models import Article
 from .forms import ArticleForm
 from zanhu.helpers import AuthorRequireView
@@ -77,4 +78,16 @@ class ArticleDetailView(LoginRequiredMixin, DetailView):
     template_name = 'articles/article_detail.html'
 
 
+def notify_comment(**kwargs):
+    """
+    文章有评论时通知作者
+    :param kwargs:
+    :return:
+    """
+    actor = kwargs['request'].user
+    obj = kwargs['comment'].comtent_object
 
+    notification_handler(actor, obj, 'c', obj)
+
+# 观察者模式 = 订阅[列表] + 通知(同步)
+comment_was_posted.connect(receiver=notify_comment)

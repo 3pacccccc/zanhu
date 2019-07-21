@@ -1,14 +1,15 @@
+from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.security.websocket import AllowedHostsOriginValidator
 from django.urls import path
 
-__author__ = "A$ AP xiaoma"
+from zanhu.messager.consumer import MessagesConsumer
+from zanhu.notifications.consumer import NotificationsConsumer
 
-from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
-from channels.security.websocket import AllowedHostsOriginValidator
+# __author__ = "MaRuiMin"
+
 
 # AuthMiddlewareStack用于websocket认证，继承了cookiemiddleware，sessionmiddleware， authmiddleware，兼容django认证系统
-
-from zanhu.messager.consumer import MessagesConsumer
 
 # self.scope['type']获取协议类型
 # self.scope['url_route']['kwargs']['username']获取url中关键字参数
@@ -33,7 +34,7 @@ application = ProtocolTypeRouter({
     'websocket': AllowedHostsOriginValidator(
         AuthMiddlewareStack(
             URLRouter([
-                # path('ws/notifications/', NotificationsConsumer),
+                path('ws/notifications/', NotificationsConsumer),
                 path('ws/<str:username>/', MessagesConsumer)
             ])
         )
